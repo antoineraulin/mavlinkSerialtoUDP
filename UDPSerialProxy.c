@@ -183,7 +183,36 @@ void workerLoop() {
 	}
 }
 
-int main() {
+// get args U=UDP port, S=serial port, B=baudrate
+int main(int argc, char** argv) {
+	if (argc < 4) {
+		printf("Usage: %s -U='UDP port' -S='serial port' -B='baudrate'\n", argv[0]);
+		return 1;
+	}
+
+	int port = 0;
+	char* serialPort = NULL;
+	int baudRate = 0;
+
+	for (int i = 1; i < argc; i++) {
+		if (argv[i][0] == '-') {
+			switch (argv[i][1]) {
+			case 'U':
+				port = atoi(argv[i] + 3);
+				break;
+			case 'S':
+				serialPort = argv[i] + 3;
+				break;
+			case 'B':
+				baudRate = atoi(argv[i] + 3);
+				break;
+			}
+		}
+	}
+	print("UDP port: %d\n", port);
+	print("Serial port: %s\n", serialPort);
+	print("Baudrate: %d\n", baudRate);
+
 	openSerialConnection("/dev/ttyUSB0", 115200);
 	openUDPSocket("127.0.0.1", 14550);
 
